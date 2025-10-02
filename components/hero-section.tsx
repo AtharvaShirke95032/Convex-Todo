@@ -30,7 +30,7 @@ const transitionVariants = {
 export default function HeroSection() {
     return (
         <>
-            
+            <HeroHeader/>
             <main className="overflow-hidden">
                 <div
                     aria-hidden

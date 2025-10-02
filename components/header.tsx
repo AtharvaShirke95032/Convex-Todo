@@ -82,7 +82,7 @@ export const HeroHeader = () => {
                             </div>
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                                 <Unauthenticated>
-                                    <SignInButton mode='modal' forceRedirectUrl={"/todos"}>
+                                    <SignInButton mode='modal' forceRedirectUrl={"/dashboard"}>
 
                                     
                                 <Button
@@ -95,7 +95,7 @@ export const HeroHeader = () => {
                                     </Link>
                                 </Button>
                                 </SignInButton>
-                                <SignUpButton mode='modal' forceRedirectUrl={"/todos"}>
+                                <SignUpButton mode='modal' forceRedirectUrl={"/dashboard"}>
                                 <Button
                                     asChild
                                     size="sm"

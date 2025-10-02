@@ -30,11 +30,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClerkProvider>
           <ConvexClientProvider>
-            <HeroHeader />
-            <div className='pt-20'>
+            
+            
 
             {children}
-            </div>
+            
             </ConvexClientProvider>
         </ClerkProvider>
       </body>
