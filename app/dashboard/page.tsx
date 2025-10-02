@@ -1,4 +1,6 @@
+"use client"
 import { AppSidebar } from "@/components/app-sidebar"
+import { Greed } from "@/components/greed"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,11 +13,14 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { useState } from "react"
+import { MonthGrid } from "react-day-picker"
 
 export default function Page() {
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <SidebarInset>
         <header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
@@ -26,12 +31,16 @@ export default function Page() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>October 2024</BreadcrumbPage>
+                <BreadcrumbPage>
+                  {selectedDate
+                    ? selectedDate.toLocaleString("default", { month: "long", year: "numeric" })
+                    : ""}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        {/* <div className="flex flex-1 flex-col gap-4 p-4">
           <div className="grid auto-rows-min gap-4 md:grid-cols-5">
             {Array.from({ length: 31 }).map((_, i) => (
               <div key={i} className="bg-muted/50 aspect-square rounded-xl" >
@@ -39,7 +48,8 @@ export default function Page() {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
+        <Greed selectedDate={selectedDate ?? new Date()}/>
       </SidebarInset>
     </SidebarProvider>
   )

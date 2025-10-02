@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Plus } from "lucide-react"
 
-import { Calendars } from "@/components/calendars"
 import { DatePicker } from "@/components/date-picker"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -15,40 +14,26 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "@/components/ui/sidebar"
+import { Cal } from "./calendars"
 
 // This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  calendars: [
-    {
-      name: "My Calendars",
-      items: ["Personal", "Work", "Family"],
-    },
-    {
-      name: "Favorites",
-      items: ["Holidays", "Birthdays"],
-    },
-    {
-      name: "Other",
-      items: ["Travel", "Reminders", "Deadlines"],
-    },
-  ],
+
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  selectedDate: Date | undefined
+  setSelectedDate: (date: Date | undefined) => void
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({selectedDate, setSelectedDate, ...props }: AppSidebarProps){
   return (
     <Sidebar {...props}>
       <SidebarHeader className="border-sidebar-border h-16 border-b">
         <NavUser />
       </SidebarHeader>
-      <SidebarContent>
-        <DatePicker />
+      <SidebarContent className="flex items-center">
+      
         <SidebarSeparator className="mx-0" />
-        <Calendars calendars={data.calendars} />
+        <Cal date={selectedDate} setDate={setSelectedDate}/>
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
