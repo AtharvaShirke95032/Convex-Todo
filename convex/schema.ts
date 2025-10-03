@@ -15,5 +15,6 @@ export default defineSchema({
     isCompleted: v.boolean(),
     createdAt: v.number(),
     ownerId: v.string(),
+    date:v.number()
   }),
 });

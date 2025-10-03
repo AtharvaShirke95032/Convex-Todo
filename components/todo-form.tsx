@@ -32,7 +32,7 @@ const categories = [
 ];
 
 
-const TodoForm = () => {
+const TodoForm = ({day}:any) => {
   const { userId } = useAuth();
   const addTodo = useMutation(api.todos.addTodo);
 
@@ -46,12 +46,15 @@ const TodoForm = () => {
 
   const onSubmit = (data: TodoFormValues) => {
     if (!userId) return;
+   
 
     addTodo({
       text: data.text,
       category: data.category,
       ownerId: userId,
+      date:day?day.getTime() :new Date().setHours(0,0,0,0)
     });
+    console.log("adwadaw",addTodo)
 
     form.reset({
       text: "",
