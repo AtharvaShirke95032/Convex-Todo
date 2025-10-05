@@ -9,7 +9,9 @@ import {
 import TodoForm from "./todo-form";
 import { api } from "@/convex/_generated/api";
 import { useAuth } from "@clerk/nextjs";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
+import { deleteTodo, toggleTodo } from "@/convex/todos";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "./ui/context-menu";
 
 export const Greed = ({ selectedDate }: { selectedDate?: Date }) => {
   if (!selectedDate) return null;
@@ -23,7 +25,6 @@ export const Greed = ({ selectedDate }: { selectedDate?: Date }) => {
   const firstDay = new Date(year, month, 1).getDay();
 
   const { userId } = useAuth();
-  if (!userId) return null;
 
   const monthStart = new Date(year, month, 1);
   monthStart.setHours(0, 0, 0, 0);
@@ -32,9 +33,12 @@ export const Greed = ({ selectedDate }: { selectedDate?: Date }) => {
 
   const todos = useQuery(
     api.todos.getTodos,
-    { userId, monthStart: monthStart.getTime(), monthEnd: monthEnd.getTime() }
+    userId
+      ? { userId, monthStart: monthStart.getTime(), monthEnd: monthEnd.getTime() }
+      : "skip"
   );
-
+  const toggleTodo = useMutation(api.todos.toggleTodo)
+  const deleteTodo = useMutation(api.todos.deleteTodo)
   const handleDayClick = (day: number) => {
     setClickedDay(new Date(year, month, day));
     setOpen(true);
@@ -77,22 +81,27 @@ export const Greed = ({ selectedDate }: { selectedDate?: Date }) => {
             <div
               key={`day-${day}`}
               onClick={() => handleDayClick(day)}
-              className={`aspect-square rounded-lg p-2 transition relative cursor-pointer ${
-                isToday
-                  ? "bg-primary text-primary-foreground font-semibold"
-                  : "bg-muted/30 hover:bg-muted"
-              }`}
+              className={`aspect-square rounded-lg p-2 transition relative cursor-pointer ${isToday
+                ? "bg-secondary "
+                : "bg-muted/30 hover:bg-muted"
+                }`}
             >
-              <div className="absolute top-2 right-2 text-xs font-semibold bg-amber-300 w-6 h-6 flex items-center justify-center rounded-full">
+              <div className="absolute top-2 right-2 text-xs font-semibold bg-primary-foreground w-6 h-6 flex items-center justify-center rounded-full">
                 {day}
               </div>
+              
 
               <div className="mt-6 space-y-1 text-xs overflow-hidden">
-                {dayTodo.slice(0, 3).map((todo) => (
-                  <div key={todo._id} className="truncate">
-                    • {todo.text}
-                  </div>
-                ))}
+                <ul className="list-disc list-inside">
+                  {dayTodo.slice(0,3).map((todo) => (
+                    <li
+                      key={todo._id}
+                      className={todo.isCompleted ? "line-through text-gray-400" : ""}
+                    >
+                      {todo.text}
+                    </li>
+                  ))}
+                </ul>
                 {dayTodo.length > 3 && (
                   <div className="text-gray-500 truncate">+{dayTodo.length - 3} more</div>
                 )}
@@ -110,17 +119,38 @@ export const Greed = ({ selectedDate }: { selectedDate?: Date }) => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-2 mb-4">
+          <div className="flex gap-2 flex-wrap cursor-pointer">
             {clickedDay &&
               todos
                 ?.filter((todo) => todo.date === clickedDay.setHours(0, 0, 0, 0))
                 .map((todo) => (
-                  <div
-                    key={todo._id}
-                    className="px-2 py-1 bg-muted rounded-md flex justify-between items-center"
-                  >
-                    <span>{todo.text}</span>
-                  </div>
+                  <ContextMenu key={todo._id}>
+                    <ContextMenuTrigger asChild>
+
+                      <button
+                        onClick={() =>
+                          toggleTodo({
+                            todoId: todo._id,
+                            completed: !todo.isCompleted,
+                          })
+                        }
+                        className={`px-4 py-2 rounded-md font-semibold transition-colors duration-200 cursor-pointer text-sm sm:text-base ${todo.isCompleted
+                          ? "bg-primary text-white"
+                          : "bg-secondary text-white"
+                          }`}
+                      >
+                        {todo.text} ({todo.category})
+                      </button>
+                    </ContextMenuTrigger>
+                    <ContextMenuContent>
+                      <ContextMenuItem
+                        variant="destructive"
+                        onClick={() => deleteTodo({ todoId: todo._id })}
+                      >
+                        Delete
+                      </ContextMenuItem>
+                    </ContextMenuContent>
+                  </ContextMenu>
                 ))}
           </div>
 

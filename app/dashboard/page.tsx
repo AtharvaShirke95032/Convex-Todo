@@ -1,5 +1,6 @@
 "use client"
 import { AppSidebar } from "@/components/app-sidebar"
+import { ModeToggle } from "@/components/button-theme"
 import { Greed } from "@/components/greed"
 import {
   Breadcrumb,
@@ -14,7 +15,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { useState } from "react"
-import { MonthGrid } from "react-day-picker"
 
 export default function Page() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
@@ -22,34 +22,32 @@ export default function Page() {
     <SidebarProvider>
       <AppSidebar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
       <SidebarInset>
-        <header className="bg-background sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="bg-primary-foreground z-50 sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
           />
-          <Breadcrumb>
+          <Breadcrumb className="w-full flex justify-between">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbPage>
                   {selectedDate
                     ? selectedDate.toLocaleString("default", { month: "long", year: "numeric" })
                     : ""}
+                    
                 </BreadcrumbPage>
+                
               </BreadcrumbItem>
             </BreadcrumbList>
+              <ModeToggle/>
+
           </Breadcrumb>
         </header>
-        {/* <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-5">
-            {Array.from({ length: 31 }).map((_, i) => (
-              <div key={i} className="bg-muted/50 aspect-square rounded-xl" >
-                
-              </div>
-            ))}
-          </div>
-        </div> */}
-        <Greed selectedDate={selectedDate ?? new Date()}/>
+        <div className="p-4 flex justify-center items-center">
+          <Greed selectedDate={selectedDate ?? new Date()} />
+
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

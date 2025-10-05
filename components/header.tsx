@@ -115,7 +115,7 @@ export const HeroHeader = () => {
                                 </Button>
                                 </Unauthenticated>
                                 <Authenticated>
-                                    <Button onClick={()=>router.push("/todos")}>
+                                    <Button onClick={()=>router.push("/dashboard")}>
                                         Dashboard
                                     </Button>
                                     <UserButton/>
